@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+    <title></title>
+    <script src=" https://cdn.bootcss.com/vue/2.2.2/vue.min.js"></script>
+</head>
+<body>
+<div class="app">
+    新增一个人<br />
+    <input type="hidden" v-model="ID" />
+    姓名:<input v-model="newPerson.name" type="text"/><br />
+    年龄:<input v-model="newPerson.age" type="number" /><br />
+    性别：
+    <select v-model="newPerson.sex">
+        <option value="男">男</option>
+        <option value="女">女</option>
+    </select>
+    <button @click="CreatePerson(ID)" v-if="isEdit">添加</button>
+    <button @click="CreatePerson(ID)" v-else>保存</button>
+    <table border="1" style="text-align:center;" cellpadding="0" cellspacing="0">
+        <tr>
+            <td>
+                序号
+            </td>
+            <td>
+                姓名
+            </td>
+            <td>
+                年龄
+            </td>
+            <td>
+                性别
+            </td>
+            <td style="text-align:center;">
+                操作
+            </td>
+        </tr>
+        <tr v-for="(p,index) in peoples">
+            <td> &nbsp; {{index+1}} &nbsp; </td>
+            <td> &nbsp; {{p.name}} &nbsp; </td>
+            <td> &nbsp; {{p.age}} &nbsp; </td>
+            <td> &nbsp; {{p.sex}} &nbsp; </td>
+            <td>
+                &nbsp; <button @click="DeletePerson(index)">删除</button>
+                <button @click="EditPerson(index)">编辑</button> &nbsp;
+            </td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>
+<script type="text/javascript">
+    var data = {
+        ID:-1,
+        isEdit:true,
+        newPerson: {
+            name: "",
+            age: 0,
+            sex:'男'
+        },
+        peoples: [
+            {
+                name: "Tom",
+                age: 28,
+                sex: '女'
+            },
+            {
+                name: "Jack",
+                age: 28,
+                sex: '女'
+            }
+        ]
+    }
+    new Vue({
+        el: '.app',
+        data: data,
+        methods: {
+            CreatePerson: function (ID) {
+                if (this.newPerson.name == "") {
+                    alert("请填写姓名");
+                    return;
+                }
+                else if (this.newPerson.age >= 100 || this.newPerson.age <= 0) {
+                    alert("年龄不符合标准");
+                    return;
+                }
+                if (ID == -1) {
+                    this.peoples.push(this.newPerson);
+                }
+                else {
+                    this.peoples[ID] = this.newPerson;
+                }
+                this.newPerson = { name: '', age: 0, sex: '男' }
+                this.isEdit = true;
+            },
+            DeletePerson: function (index) {
+                this.peoples.splice(index, 1);
+            },
+            EditPerson: function (index) {
+                data.ID = index;
+                data.isEdit = false;
+                this.newPerson = { name: this.peoples[index].name, age: this.peoples[index].age, sex: this.peoples[index].sex }
+            }
+        }
+    })
+</script>
